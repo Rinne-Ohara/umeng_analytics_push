@@ -73,7 +73,7 @@ public class UmengAnalyticsPushFlutterAndroid {
                 @Override
                 public void handleMessage(Context context, UMessage msg) {
                     super.handleMessage(context, msg);
-                    rouseMainActivity(context);
+//                    rouseMainActivity(context);
                     UmengAnalyticsPushPlugin.eventSink.success(msg.getRaw().toString());
                 }
 //                    @Override
