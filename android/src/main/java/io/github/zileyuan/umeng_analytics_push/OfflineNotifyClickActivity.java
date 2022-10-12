@@ -31,7 +31,7 @@ public class OfflineNotifyClickActivity extends UmengNotifyClickActivity {
         mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
         mainIntent.setPackage(this.getPackageName());
         mApps = getPackageManager().queryIntentActivities(mainIntent, 0);
-
+        Log.e("CCCCCCCCCC", "onMessage:error ");
         for (int i = 0; i < mApps.size(); i++) {
             info = mApps.get(i);
             String packageName = info.activityInfo.packageName;
