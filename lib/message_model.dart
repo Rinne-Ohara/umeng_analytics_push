@@ -9,18 +9,18 @@ class MessageModel {
 
   factory MessageModel.fromJson(Map<String, dynamic> srcJson) {
     return MessageModel(
-      srcJson['displayType'] as String?,
+      srcJson['display_type'] as String?,
       srcJson['extra'] as Map<String, dynamic>?,
       srcJson['body'] == null ? null : MessageBodyModel.fromJson(srcJson['body'] as Map<String, dynamic>),
-      srcJson['msgId'] as String?,
+      srcJson['msg_id'] as String?,
     );
   }
 
   Map<String, dynamic> toJson() => {
-    'displayType': displayType,
+    'display_type': displayType,
     'extra': extra,
     'body': body?.toJson(),
-    'msgId': msgId,
+    'msg_id': msgId,
   };
 }
 
@@ -42,29 +42,29 @@ class MessageBodyModel {
 
   factory MessageBodyModel.fromJson(Map<String, dynamic> srcJson) {
     return MessageBodyModel(
-      srcJson['afterOpen'] as String?,
+      srcJson['after_open'] as String?,
       srcJson['ticker'] as String?,
       srcJson['custom'] as String?,
       srcJson['url'] as String?,
       srcJson['activity'] as String?,
       srcJson['title'] as String?,
-      srcJson['playSound'] as String?,
-      srcJson['playLights'] as String?,
-      srcJson['playVibrate'] as String?,
+      srcJson['play_sound'] as String?,
+      srcJson['play_lights'] as String?,
+      srcJson['play_vibrate'] as String?,
       srcJson['text'] as String?,
     );
   }
 
   Map<String, dynamic> toJson() => {
-    'afterOpen': afterOpen,
+    'after_open': afterOpen,
     'ticker': ticker,
     'custom': custom,
     'url': url,
     'activity': activity,
     'title': title,
-    'playSound': playSound,
-    'playLights': playLights,
-    'playVibrate': playVibrate,
+    'play_sound': playSound,
+    'play_lights': playLights,
+    'play_vibrate': playVibrate,
     'text': text,
   };
 }

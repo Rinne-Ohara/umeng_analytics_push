@@ -5,8 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.taobao.accs.ACCSClient;
+import com.taobao.accs.AccsClientConfig;
+import com.taobao.agoo.TaobaoRegister;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
+import com.umeng.commonsdk.utils.UMUtils;
 import com.umeng.message.MsgConstant;
 import com.umeng.message.PushAgent;
 import com.umeng.message.UmengNotificationClickHandler;
@@ -34,6 +38,18 @@ public class UmengAnalyticsPushFlutterAndroid {
         UmengAnalyticsPushFlutterAndroid.appkey = appkey;
         UmengAnalyticsPushFlutterAndroid.channel = channel;
         UmengAnalyticsPushFlutterAndroid.messageSecret = messageSecret;
+
+        try {
+            //解决推送消息显示乱码的问题
+            AccsClientConfig.Builder builder = new AccsClientConfig.Builder();
+            builder.setAppKey("umeng:" + appkey);
+            builder.setAppSecret(messageSecret);
+            builder.setTag(AccsClientConfig.DEFAULT_CONFIGTAG);
+            ACCSClient.init(context, builder.build());
+            TaobaoRegister.setAccsConfigTag(context, AccsClientConfig.DEFAULT_CONFIGTAG);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         UMConfigure.preInit(context, appkey, channel);
     }
 
@@ -76,6 +92,7 @@ public class UmengAnalyticsPushFlutterAndroid {
                 public void handleMessage(Context context, UMessage msg) {
                     super.handleMessage(context, msg);
 //                    rouseMainActivity(context);
+                    Log.e("umeng_push", "接收到推送的消息：-------->  " + msg.getRaw().toString());
                     UmengAnalyticsPushPlugin.eventSink.success(msg.getRaw().toString());
                 }
 //                    @Override
@@ -130,5 +147,16 @@ public class UmengAnalyticsPushFlutterAndroid {
     public static void rouseMainActivity(Context context) {
         Intent intent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
         context.startActivity(intent);
+    }
+
+
+    /**
+     * 是否运行在主进程
+     *
+     * @param context 应用上下文
+     * @return true: 主进程；false: 子进程
+     */
+    public static boolean isMainProcess(Context context) {
+        return UMUtils.isMainProgress(context);
     }
 }
