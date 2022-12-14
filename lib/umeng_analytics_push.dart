@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/services.dart';
-import 'package:umeng_analytics_push/message_model.dart';
 
 /// Message callback function type define
-typedef void OnPushMessageCallback(MessageModel message);
+typedef void OnPushMessageCallback(Map<String, dynamic>? extra);
 
 /// Main Class
 class UmengAnalyticsPush {
@@ -16,16 +16,26 @@ class UmengAnalyticsPush {
   static const DEVICE_TYPE_BOX = 2;
 
   /// Communication MethodChannel
-  static const MethodChannel _methodChannel =
-      const MethodChannel('umeng_analytics_push');
-  static const EventChannel _eventChannel =
-      const EventChannel('umeng_analytics_push/stream');
+  static const MethodChannel _methodChannel = const MethodChannel('umeng_analytics_push');
+  static const EventChannel _eventChannel = const EventChannel('umeng_analytics_push/stream');
 
   /// Add a push message callback function by [onPushMessageCallback]
   static addPushMessageCallback(OnPushMessageCallback onPushMessageCallback) {
     _eventChannel.receiveBroadcastStream().listen((data) {
-      var model = MessageModel.fromJson(json.decode(data));
-      onPushMessageCallback(model);
+      try {
+        print("data:-->$data");
+        if (Platform.isAndroid) {
+          var model = json.decode(data);
+          var extra = model["extra"] as Map<String, dynamic>?;
+          onPushMessageCallback(extra);
+        } else {
+          var model = new Map<String, dynamic>.from(data);
+          var extra = new Map<String, dynamic>.from(model["extra"] ?? {});
+          onPushMessageCallback(extra);
+        }
+      } catch (e) {
+        print("推送错误：$e");
+      }
     });
   }
 
@@ -88,10 +98,7 @@ class UmengAnalyticsPush {
 
   /// init Umeng by [logEnabled], [pushEnabled] and option [androidMessageSecret]
   static Future<void> initUmeng(bool logEnabled, bool pushEnabled) async {
-    Map<String, dynamic> args = {
-      'logEnabled': logEnabled,
-      'pushEnabled': pushEnabled
-    };
+    Map<String, dynamic> args = {'logEnabled': logEnabled, 'pushEnabled': pushEnabled};
     await _methodChannel.invokeMethod('initUmeng', args);
   }
 }
