@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 
 /// Message callback function type define
-typedef void OnPushMessageCallback(Map<String, dynamic>? extra);
+typedef void OnPushMessageCallback(Map<String, dynamic> extra);
 
 /// Main Class
 class UmengAnalyticsPush {
@@ -26,11 +26,11 @@ class UmengAnalyticsPush {
         print("data:-->$data");
         if (Platform.isAndroid) {
           var model = json.decode(data);
-          var extra = model["extra"] as Map<String, dynamic>?;
+          Map<String, dynamic> extra = model["extra"] as Map<String, dynamic>? ?? {};
           onPushMessageCallback(extra);
         } else {
           var model = new Map<String, dynamic>.from(data);
-          var extra = new Map<String, dynamic>.from(model["extra"] ?? {});
+          Map<String, dynamic> extra = new Map<String, dynamic>.from(model["extra"] ?? {});
           onPushMessageCallback(extra);
         }
       } catch (e) {
