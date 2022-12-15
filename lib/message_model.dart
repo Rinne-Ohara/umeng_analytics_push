@@ -1,11 +1,11 @@
 /// Wrap Message for Android&iOS
 class MessageModel {
   String? displayType;
-  Map<String, dynamic>? extra;
-  MessageBodyModel? body;
+  Map<String, dynamic>? extra;//
+  MessageBodyModel? body;//android专用
   String? msgId;
-  String? source;
-  MessageApsModel? aps;
+  String? source;//来源 0是前台推送 1是后台推送 目前ios专用
+  MessageApsModel? aps;//ios专用
 
   MessageModel(this.displayType, this.extra, this.body, this.msgId, this.source, this.aps);
 
