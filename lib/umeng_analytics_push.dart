@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/services.dart';
 
+import 'message_model.dart';
+
 /// Message callback function type define
-typedef void OnPushMessageCallback(Map<String, dynamic> extra);
+typedef void OnPushMessageCallback(dynamic data);
 
 /// Main Class
 class UmengAnalyticsPush {
@@ -22,21 +23,20 @@ class UmengAnalyticsPush {
   /// Add a push message callback function by [onPushMessageCallback]
   static addPushMessageCallback(OnPushMessageCallback onPushMessageCallback) {
     _eventChannel.receiveBroadcastStream().listen((data) {
-      try {
-        print("data:-->$data");
-        if (Platform.isAndroid) {
-          var model = json.decode(data);
-          Map<String, dynamic> extra = model["extra"] as Map<String, dynamic>? ?? {};
-          onPushMessageCallback(extra);
-        } else {
-          var model = new Map<String, dynamic>.from(data);
-          Map<String, dynamic> extra = new Map<String, dynamic>.from(model["extra"] ?? {});
-          onPushMessageCallback(extra);
-        }
-      } catch (e) {
-        print("推送错误：$e");
-      }
+      print("data:-->$data");
+      onPushMessageCallback(data);
     });
+  }
+
+  static MessageModel? formatData(dynamic data) {
+    try {
+      var json = jsonEncode(data);
+      var model = MessageModel.fromJson(jsonDecode(json));
+      return model;
+    } catch (e) {
+      print(e);
+      return null;
+    }
   }
 
   /// get DeviceToken [DeviceToken]

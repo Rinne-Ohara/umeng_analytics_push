@@ -4,8 +4,10 @@ class MessageModel {
   Map<String, dynamic>? extra;
   MessageBodyModel? body;
   String? msgId;
+  String? source;
+  MessageApsModel? aps;
 
-  MessageModel(this.displayType, this.extra, this.body, this.msgId);
+  MessageModel(this.displayType, this.extra, this.body, this.msgId, this.source, this.aps);
 
   factory MessageModel.fromJson(Map<String, dynamic> srcJson) {
     return MessageModel(
@@ -13,15 +15,19 @@ class MessageModel {
       srcJson['extra'] as Map<String, dynamic>?,
       srcJson['body'] == null ? null : MessageBodyModel.fromJson(srcJson['body'] as Map<String, dynamic>),
       srcJson['msg_id'] as String?,
+      srcJson['source'] as String?,
+      srcJson['aps'] == null ? null : MessageApsModel.fromJson(srcJson['aps'] as Map<String, dynamic>),
     );
   }
 
   Map<String, dynamic> toJson() => {
-    'display_type': displayType,
-    'extra': extra,
-    'body': body?.toJson(),
-    'msg_id': msgId,
-  };
+        'display_type': displayType,
+        'extra': extra,
+        'body': body?.toJson(),
+        'msg_id': msgId,
+        'source': source,
+        'aps': aps?.toJson(),
+      };
 }
 
 /// Umeng Push Message Body Content
@@ -56,15 +62,50 @@ class MessageBodyModel {
   }
 
   Map<String, dynamic> toJson() => {
-    'after_open': afterOpen,
-    'ticker': ticker,
-    'custom': custom,
-    'url': url,
-    'activity': activity,
-    'title': title,
-    'play_sound': playSound,
-    'play_lights': playLights,
-    'play_vibrate': playVibrate,
-    'text': text,
-  };
+        'after_open': afterOpen,
+        'ticker': ticker,
+        'custom': custom,
+        'url': url,
+        'activity': activity,
+        'title': title,
+        'play_sound': playSound,
+        'play_lights': playLights,
+        'play_vibrate': playVibrate,
+        'text': text,
+      };
+}
+
+class MessageApsModel {
+  MessageApsAlertModel? alert;
+
+  MessageApsModel(this.alert);
+
+  factory MessageApsModel.fromJson(Map<String, dynamic> srcJson) {
+    return MessageApsModel(
+      srcJson['alert'] == null ? null : MessageApsAlertModel.fromJson(srcJson['alert'] as Map<String, dynamic>),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'alert': alert?.toJson(),
+      };
+}
+
+class MessageApsAlertModel {
+  String? title;
+  String? body;
+
+  MessageApsAlertModel(this.title, this.body);
+
+  factory MessageApsAlertModel.fromJson(Map<String, dynamic> srcJson) {
+    return MessageApsAlertModel(
+      srcJson['title'] as String?,
+      srcJson['body'] as String?,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'title': title,
+        'body': body,
+      };
 }
