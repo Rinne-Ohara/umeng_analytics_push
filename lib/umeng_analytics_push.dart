@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/services.dart';
 
@@ -30,9 +31,14 @@ class UmengAnalyticsPush {
 
   static MessageModel? formatData(dynamic data) {
     try {
-      var json = jsonEncode(data);
-      var model = MessageModel.fromJson(jsonDecode(json));
-      return model;
+      if (Platform.isIOS) {
+        var json = jsonEncode(data);
+        var model = MessageModel.fromJson(jsonDecode(json));
+        return model;
+      } else {
+        var model = MessageModel.fromJson(jsonDecode(data));
+        return model;
+      }
     } catch (e) {
       print(e);
       return null;
