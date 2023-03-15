@@ -17,7 +17,9 @@
         android:exported="true"
         tools:replace="android:exported">
         
-        <receiver android:name="io.github.zileyuan.umeng_analytics_push.SimpleMeizuPushReceiver">
+        <receiver android:name="io.github.zileyuan.umeng_analytics_push.SimpleMeizuPushReceiver"
+            android:exported="true"
+            >
             <intent-filter>
                 <!-- 接收push消息 -->
                 <action android:name="com.meizu.flyme.push.intent.MESSAGE" />
